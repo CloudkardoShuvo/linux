@@ -1,0 +1,107 @@
+Merge tag 'net-6.6-rc5' of git://git.kernel.org/pub/scm/linux/kernel/…
+…git/netdev/net
+
+Pull networking fixes from Jakub Kicinski:
+ "Including fixes from Bluetooth, netfilter, BPF and WiFi.
+
+  I didn't collect precise data but feels like we've got a lot of 6.5
+  fixes here. WiFi fixes are most user-awaited.
+
+  Current release - regressions:
+
+   - Bluetooth: fix hci_link_tx_to RCU lock usage
+
+  Current release - new code bugs:
+
+   - bpf: mprog: fix maximum program check on mprog attachment
+
+   - eth: ti: icssg-prueth: fix signedness bug in prueth_init_tx_chns()
+
+  Previous releases - regressions:
+
+   - ipv6: tcp: add a missing nf_reset_ct() in 3WHS handling
+
+   - vringh: don't use vringh_kiov_advance() in vringh_iov_xfer(), it
+     doesn't handle zero length like we expected
+
+   - wifi:
+      - cfg80211: fix cqm_config access race, fix crashes with brcmfmac
+      - iwlwifi: mvm: handle PS changes in vif_cfg_changed
+      - mac80211: fix mesh id corruption on 32 bit systems
+      - mt76: mt76x02: fix MT76x0 external LNA gain handling
+
+   - Bluetooth: fix handling of HCI_QUIRK_STRICT_DUPLICATE_FILTER
+
+   - l2tp: fix handling of transhdrlen in __ip{,6}_append_data()
+
+   - dsa: mv88e6xxx: avoid EEPROM timeout when EEPROM is absent
+
+   - eth: stmmac: fix the incorrect parameter after refactoring
+
+  Previous releases - always broken:
+
+   - net: replace calls to sock->ops->connect() with kernel_connect(),
+     prevent address rewrite in kernel_bind(); otherwise BPF hooks may
+     modify arguments, unexpectedly to the caller
+
+   - tcp: fix delayed ACKs when reads and writes align with MSS
+
+   - bpf:
+      - verifier: unconditionally reset backtrack_state masks on global
+        func exit
+      - s390: let arch_prepare_bpf_trampoline return program size, fix
+        struct_ops offsets
+      - sockmap: fix accounting of available bytes in presence of PEEKs
+      - sockmap: reject sk_msg egress redirects to non-TCP sockets
+
+   - ipv4/fib: send netlink notify when delete source address routes
+
+   - ethtool: plca: fix width of reads when parsing netlink commands
+
+   - netfilter: nft_payload: rebuild vlan header on h_proto access
+
+   - Bluetooth: hci_codec: fix leaking memory of local_codecs
+
+   - eth: intel: ice: always add legacy 32byte RXDID in supported_rxdids
+
+   - eth: stmmac:
+     - dwmac-stm32: fix resume on STM32 MCU
+     - remove buggy and unneeded stmmac_poll_controller, depend on NAPI
+
+   - ibmveth: always recompute TCP pseudo-header checksum, fix use of
+     the driver with Open vSwitch
+
+   - wifi:
+      - rtw88: rtw8723d: fix MAC address offset in EEPROM
+      - mt76: fix lock dependency problem for wed_lock
+      - mwifiex: sanity check data reported by the device
+      - iwlwifi: ensure ack flag is properly cleared
+      - iwlwifi: mvm: fix a memory corruption due to bad pointer arithm
+      - iwlwifi: mvm: fix incorrect usage of scan API
+
+  Misc:
+
+   - wifi: mac80211: work around Cisco AP 9115 VHT MPDU length"
+
+* tag 'net-6.6-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net: (99 commits)
+  MAINTAINERS: update Matthieu's email address
+  mptcp: userspace pm allow creating id 0 subflow
+  mptcp: fix delegated action races
+  net: stmmac: remove unneeded stmmac_poll_controller
+  net: lan743x: also select PHYLIB
+  net: ethernet: mediatek: disable irq before schedule napi
+  net: mana: Fix oversized sge0 for GSO packets
+  net: mana: Fix the tso_bytes calculation
+  net: mana: Fix TX CQE error handling
+  netlink: annotate data-races around sk->sk_err
+  sctp: update hb timer immediately after users change hb_interval
+  sctp: update transport state when processing a dupcook packet
+  tcp: fix delayed ACKs for MSS boundary condition
+  tcp: fix quick-ack counting to count actual ACKs of new data
+  page_pool: fix documentation typos
+  tipc: fix a potential deadlock on &tx->lock
+  net: stmmac: dwmac-stm32: fix resume on STM32 MCU
+  ipv4: Set offload_failed flag in fibmatch results
+  netfilter: nf_tables: nft_set_rbtree: fix spurious insertion failure
+  netfilter: nf_tables: Deduplicate nft_register_obj audit logs
+  ...
